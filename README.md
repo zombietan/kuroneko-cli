@@ -10,7 +10,7 @@
 ## usage
 `$ kuroneko 伝票番号`  
 ###### example
-```sh:example
+```
 伝票番号 xxxx-xxxx-xxxx
 配達完了
 このお品物はお届けが済んでおります。
