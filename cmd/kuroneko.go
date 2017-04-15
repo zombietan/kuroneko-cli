@@ -1,11 +1,10 @@
-package main
+package cmd
 
 import (
 	"bufio"
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"unicode/utf8"
 
@@ -15,21 +14,12 @@ import (
 	"golang.org/x/text/transform"
 )
 
-func main() {
-	app := cli.NewApp()
-	app.Name = "kuroneko"
-	app.Usage = "Display delivery status"
-	app.Version = "0.0.0"
-	app.Action = kuroneko
-	app.Run(os.Args)
-}
-
 func makeSpace(count int) string {
 	s := "　"
 	return strings.Repeat(s, count)
 }
 
-var kuroneko = func(c *cli.Context) {
+var Kuroneko = func(c *cli.Context) {
 	if c.NArg() < 1 {
 		fmt.Println("伝票番号を入力してください")
 		return
