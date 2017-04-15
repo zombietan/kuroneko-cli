@@ -1,1 +1,1 @@
-# kuroneko-cli
+# kuroneko
