@@ -1,4 +1,5 @@
 # kuroneko
+ヤマト運輸のステータス取得
 
 ## installation
 `$ go get github.com/zombietan/kuroneko/cmd`  
