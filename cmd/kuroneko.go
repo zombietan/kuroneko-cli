@@ -9,7 +9,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
