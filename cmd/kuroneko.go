@@ -143,7 +143,11 @@ var TrackSerialNumbers = func(c *cli.Context) {
 			}
 		})
 
-		fmt.Print("\n")
+		doc.Find("hr").Each(func(_ int, args *goquery.Selection) {
+			if args.HasClass("middle") {
+				fmt.Print("\n")
+			}
+		})
 
 		doc.Find(".meisai tr").Each(func(i int, args *goquery.Selection) {
 			if i != 0 {
