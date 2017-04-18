@@ -107,8 +107,8 @@ var TrackSerialNumbers = func(c *cli.Context) {
 	values.Add("number00", "1")
 	var i uint
 	for i = 0; i < c.Uint("serial"); i++ {
-		s := fmt.Sprintf("number%02d", i+1)
-		values.Add(s, <-ch)
+		inputName := fmt.Sprintf("number%02d", i+1)
+		values.Add(inputName, <-ch)
 	}
 
 	url := "http://toi.kuronekoyamato.co.jp/cgi-bin/tneko"
