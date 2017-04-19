@@ -182,11 +182,11 @@ var TrackSerialNumbers = func(c *cli.Context) {
 
 func checkdigit(n string) <-chan string {
 	ch := make(chan string)
-	var conf int64 = 7
+	const coef = 7
 	go func() {
 		num, _ := strconv.ParseInt(n, 10, 64)
 		for {
-			digitString := num % conf
+			digitString := num % coef
 			digit := strconv.FormatInt(digitString, 10)
 			slipNum := strconv.FormatInt(num, 10) + digit
 			ch <- slipNum
