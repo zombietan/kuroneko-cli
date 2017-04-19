@@ -122,16 +122,16 @@ var TrackSerialNumbers = func(c *cli.Context) {
 
 	utfBody := transform.NewReader(bufio.NewReader(resp.Body), japanese.ShiftJIS.NewDecoder())
 
-	docs, err := goquery.NewDocumentFromReader(utfBody)
+	doc, err := goquery.NewDocumentFromReader(utfBody)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	d := color.New(color.FgYellow, color.Bold)
-	docs.Find("center").Each(func(_ int, doc *goquery.Selection) {
+	doc.Find("center").Each(func(_ int, s *goquery.Selection) {
 
-		doc.Find(".saisin td").Each(func(_ int, args *goquery.Selection) {
+		s.Find(".saisin td").Each(func(_ int, args *goquery.Selection) {
 			if args.HasClass("number") {
 				subject := args.Text()
 				// fmt.Printf(" %s\n", subject)
@@ -143,13 +143,13 @@ var TrackSerialNumbers = func(c *cli.Context) {
 			}
 		})
 
-		doc.Find("hr").Each(func(_ int, args *goquery.Selection) {
+		s.Find("hr").Each(func(_ int, args *goquery.Selection) {
 			if args.HasClass("middle") {
 				fmt.Print("\n")
 			}
 		})
 
-		doc.Find(".meisai tr").Each(func(i int, args *goquery.Selection) {
+		s.Find(".meisai tr").Each(func(i int, args *goquery.Selection) {
 			if i != 0 {
 				textArray := args.Find("td").Map(func(_ int, s *goquery.Selection) string {
 					text := s.Text()
@@ -170,7 +170,7 @@ var TrackSerialNumbers = func(c *cli.Context) {
 			}
 		})
 
-		doc.Find("hr").Each(func(_ int, args *goquery.Selection) {
+		s.Find("hr").Each(func(_ int, args *goquery.Selection) {
 			if args.HasClass("middle") {
 				underLine := strings.Repeat("-", 99)
 				fmt.Println(underLine)
