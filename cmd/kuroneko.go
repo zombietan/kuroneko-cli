@@ -130,9 +130,10 @@ var TrackSerialNumbers = func(c *cli.Context) {
 
 	d := color.New(color.FgYellow, color.Bold)
 	doc.Find("center").Each(func(_ int, s *goquery.Selection) {
-
+		flag := false
 		s.Find(".saisin td").Each(func(_ int, args *goquery.Selection) {
 			if args.HasClass("number") {
+				flag = true
 				subject := args.Text()
 				// fmt.Printf(" %s\n", subject)
 				d.Printf(" %s\n", subject)
@@ -143,11 +144,9 @@ var TrackSerialNumbers = func(c *cli.Context) {
 			}
 		})
 
-		s.Find("hr").Each(func(_ int, args *goquery.Selection) {
-			if args.HasClass("middle") {
-				fmt.Print("\n")
-			}
-		})
+		if flag {
+			fmt.Print("\n")
+		}
 
 		s.Find(".meisai tr").Each(func(i int, args *goquery.Selection) {
 			if i != 0 {
@@ -170,12 +169,10 @@ var TrackSerialNumbers = func(c *cli.Context) {
 			}
 		})
 
-		s.Find("hr").Each(func(_ int, args *goquery.Selection) {
-			if args.HasClass("middle") {
-				underLine := strings.Repeat("-", 99)
-				fmt.Println(underLine)
-			}
-		})
+		if flag {
+			underLine := strings.Repeat("-", 99)
+			fmt.Println(underLine)
+		}
 	})
 
 }
