@@ -2,12 +2,7 @@
 ヤマト運輸のステータス取得
 
 ## installation
-`$ go get github.com/zombietan/kuroneko/cmd`  
-
-`$ cd $GOPATH/src/github.com/zombietan/kuroneko`  
-
-`$ go install`  
-
+`$ go get -u github.com/zombietan/kuroneko/...`  
 ## usage
 `$ kuroneko <伝票番号>`  
 ###### example
