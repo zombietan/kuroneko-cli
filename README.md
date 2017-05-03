@@ -2,9 +2,9 @@
 ヤマト運輸のステータス取得
 
 ## installation
-    $ go get -u github.com/zombietan/kuroneko/...  
+    $ go get -u github.com/zombietan/kuroneko/...
 ## usage
-    $ kuroneko <伝票番号>  
+    $ kuroneko <伝票番号>
 ###### example
 ```
 伝票番号 xxxx-xxxx-xxxx
