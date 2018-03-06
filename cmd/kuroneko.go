@@ -22,6 +22,7 @@ func makeSpace(count int) string {
 	return strings.Repeat(s, count)
 }
 
+// TrackNumber is one item
 var TrackNumber = func(c *cli.Context) {
 	if c.NArg() < 1 {
 		fmt.Println("伝票番号を入力してください")
@@ -83,6 +84,7 @@ var TrackNumber = func(c *cli.Context) {
 	fmt.Println(underLine)
 }
 
+// TrackSerialNumbers is SerialNumbers
 var TrackSerialNumbers = func(c *cli.Context) {
 	if c.NArg() < 1 {
 		fmt.Println("伝票番号を入力してください")
@@ -97,12 +99,17 @@ var TrackSerialNumbers = func(c *cli.Context) {
 		return
 	}
 
-	if !is12Digits(slipNumber) {
-		fmt.Println("12桁の伝票番号を入力してください")
+	if !is12or11Digits(slipNumber) {
+		fmt.Println("12 or 11桁の伝票番号を入力してください")
 		return
 	}
 
-	ch := checkdigit(slipNumber[:11])
+	if !isCorrectNumber(slipNumber) {
+		fmt.Println("伝票番号に誤りがあります")
+		return
+	}
+
+	ch := checkdigit(slipNumber[:len(slipNumber)-1])
 	values := url.Values{}
 	values.Add("number00", "1")
 	var i uint
@@ -177,20 +184,35 @@ var TrackSerialNumbers = func(c *cli.Context) {
 
 }
 
+// len(n) always 11 or 10
 func checkdigit(n string) <-chan string {
 	ch := make(chan string)
 	const coef = 7
+	var format = "%012s"
+	if len(n) == 10 {
+		format = "%011s"
+	}
 	go func() {
-		num, _ := strconv.ParseInt(n, 10, 64)
+		sign, _ := strconv.ParseInt(n, 10, 64)
 		for {
-			digitString := num % coef
-			digit := strconv.FormatInt(digitString, 10)
-			slipNum := strconv.FormatInt(num, 10) + digit
-			ch <- slipNum
-			num++
+			digit := sign % coef
+			digitStr := strconv.FormatInt(digit, 10)
+			slipNum := strconv.FormatInt(sign, 10) + digitStr
+			zeroPaddingNum := fmt.Sprintf(format, slipNum)
+			ch <- zeroPaddingNum
+			sign++
 		}
 	}()
 	return ch
+}
+
+func isCorrectNumber(s string) bool {
+	const coef = 7
+	lastDigits := s[len(s)-1:]
+	otherDigits := s[:len(s)-1]
+	sign, _ := strconv.ParseInt(otherDigits, 10, 64)
+	digit := sign % coef
+	return lastDigits == fmt.Sprint(digit)
 }
 
 func isInt(s string) bool {
@@ -202,8 +224,8 @@ func isInt(s string) bool {
 	return true
 }
 
-func is12Digits(s string) bool {
-	if len(s) == 12 {
+func is12or11Digits(s string) bool {
+	if len(s) == 12 || len(s) == 11 {
 		return true
 	}
 	return false
