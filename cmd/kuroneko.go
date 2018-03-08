@@ -90,9 +90,9 @@ var TrackSerialNumbers = func(c *cli.Context) {
 		fmt.Println("伝票番号を入力してください")
 		return
 	}
-	rowNumber := c.Args()[0]
+	rawNumber := c.Args()[0]
 
-	slipNumber := removeHyphen(rowNumber)
+	slipNumber := removeHyphen(rawNumber)
 
 	if !isInt(slipNumber) {
 		fmt.Println("不正な数値です")
