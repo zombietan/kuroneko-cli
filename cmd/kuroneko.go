@@ -92,7 +92,7 @@ var TrackSerialNumbers = func(c *cli.Context) {
 	}
 	rowNumber := c.Args()[0]
 
-	slipNumber := hyphenRemove(rowNumber)
+	slipNumber := removeHyphen(rowNumber)
 
 	if !isInt(slipNumber) {
 		fmt.Println("不正な数値です")
@@ -109,7 +109,7 @@ var TrackSerialNumbers = func(c *cli.Context) {
 		return
 	}
 
-	ch := checkdigit(slipNumber[:len(slipNumber)-1])
+	ch := sevenCheckCalculate(slipNumber[:len(slipNumber)-1])
 	values := url.Values{}
 	values.Add("number00", "1")
 	var i uint
@@ -137,10 +137,10 @@ var TrackSerialNumbers = func(c *cli.Context) {
 
 	d := color.New(color.FgYellow, color.Bold)
 	doc.Find("center").Each(func(_ int, s *goquery.Selection) {
-		flag := false
+		hasDetail := false
 		s.Find(".saisin td").Each(func(_ int, args *goquery.Selection) {
 			if args.HasClass("number") {
-				flag = true
+				hasDetail = true
 				subject := args.Text()
 				// fmt.Printf(" %s\n", subject)
 				d.Printf(" %s\n", subject)
@@ -151,7 +151,7 @@ var TrackSerialNumbers = func(c *cli.Context) {
 			}
 		})
 
-		if flag {
+		if hasDetail {
 			fmt.Print("\n")
 		}
 
@@ -176,7 +176,7 @@ var TrackSerialNumbers = func(c *cli.Context) {
 			}
 		})
 
-		if flag {
+		if hasDetail {
 			underLine := strings.Repeat("-", 99)
 			fmt.Println(underLine)
 		}
@@ -184,8 +184,7 @@ var TrackSerialNumbers = func(c *cli.Context) {
 
 }
 
-// len(n) always 11 or 10
-func checkdigit(n string) <-chan string {
+func sevenCheckCalculate(n string) <-chan string {
 	ch := make(chan string)
 	const coef = 7
 	var format = "%012s"
@@ -198,8 +197,8 @@ func checkdigit(n string) <-chan string {
 			digit := sign % coef
 			digitStr := strconv.FormatInt(digit, 10)
 			slipNum := strconv.FormatInt(sign, 10) + digitStr
-			zeroPaddingNum := fmt.Sprintf(format, slipNum)
-			ch <- zeroPaddingNum
+			zeroPaddingSlipNum := fmt.Sprintf(format, slipNum)
+			ch <- zeroPaddingSlipNum
 			sign++
 		}
 	}()
@@ -231,7 +230,7 @@ func is12or11Digits(s string) bool {
 	return false
 }
 
-func hyphenRemove(s string) string {
+func removeHyphen(s string) string {
 	if strings.Contains(s, "-") {
 		removed := strings.Replace(s, "-", "", -1)
 		return removed
